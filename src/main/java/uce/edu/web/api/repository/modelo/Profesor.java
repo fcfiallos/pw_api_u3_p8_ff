@@ -22,6 +22,8 @@ public class Profesor {
     private String especialidad;
     @Column(name="prof_correo_electronico")
     private String correoElectronico;
+    @Column(name = "prof_cedula")
+    private String cedula;
 
     public Integer getId() {
         return id;
@@ -52,5 +54,11 @@ public class Profesor {
     }
     public void setCorreoElectronico(String correoElectronico) {
         this.correoElectronico = correoElectronico;
+    }
+    public String getCedula() {
+        return cedula;
+    }
+    public void setCedula(String cedula) {
+        this.cedula = cedula;
     }
 }
