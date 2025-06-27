@@ -10,8 +10,11 @@ import jakarta.transaction.Transactional;
 import uce.edu.web.api.repository.modelo.Estudiante;
 
 @Transactional
-@ApplicationScoped /*nos dicen que que va manejar transacciones y le da un ambito que se van mantener dentro de la aplicacion */
-public class EstudianteRepositoryImpl implements IEstudianteRepository{
+@ApplicationScoped /*
+                    * nos dicen que que va manejar transacciones y le da un ambito que se van
+                    * mantener dentro de la aplicacion
+                    */
+public class EstudianteRepositoryImpl implements IEstudianteRepository {
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -25,6 +28,27 @@ public class EstudianteRepositoryImpl implements IEstudianteRepository{
     public List<Estudiante> seleccionarTodos() {
         TypedQuery<Estudiante> myQuery = this.entityManager.createQuery("SELECT e FROM Estudiante e", Estudiante.class);
         return myQuery.getResultList();
+    }
+
+    @Override
+    public void actualizarPorId(Estudiante estudiante) {
+        this.entityManager.merge(estudiante);
+    }
+
+    @Override
+    public void actualizarParcialPorId(Estudiante estudiante) {
+        this.entityManager.merge(estudiante);
+
+    }
+
+    @Override
+    public void eliminarPorId(Integer id) {
+        this.entityManager.remove(this.seleccionarPorId(id));
+    }
+
+    @Override
+    public void insertar(Estudiante estudiante) {
+        this.entityManager.persist(estudiante);
     }
 
 }
