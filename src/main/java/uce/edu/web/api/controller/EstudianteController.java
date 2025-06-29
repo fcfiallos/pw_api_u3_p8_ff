@@ -75,7 +75,7 @@ public class EstudianteController {
         if(estudiante.getFechaNacimiento()!=null){
             e.setFechaNacimiento(estudiante.getFechaNacimiento());
         }
-        this.estudianteService.modificarPorId(e);
+        this.estudianteService.modificarParcialPorId(e);
     }
 
     @DELETE
