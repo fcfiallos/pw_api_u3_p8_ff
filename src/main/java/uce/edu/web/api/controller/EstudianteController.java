@@ -1,11 +1,10 @@
 package uce.edu.web.api.controller;
 
-import java.util.List;
-
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 
 import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PATCH;
@@ -13,7 +12,10 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import uce.edu.web.api.repository.modelo.Estudiante;
 import uce.edu.web.api.service.IEstudianteService;
 
@@ -32,17 +34,20 @@ public class EstudianteController {
      */
     @GET
     @Path("/{id}")
-    public Estudiante consularPorId(@PathParam("id") Integer id) {
-        return this.estudianteService.buscarPorId(id);
+    @Produces(MediaType.APPLICATION_XML)
+    public Response consularPorId(@PathParam("id") Integer id) {
+
+        return Response.status(227).entity(this.estudianteService.buscarPorId(id)).build();
     }
 
-    //?genero=F&provincia=pichincha
+    // ?genero=F&provincia=pichincha
     @GET
     @Path("")
+    @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Consultar Todos los Estudiantes", description = "Permite consultar todos los estudiantes del sistema")
-    public List<Estudiante> consultarTodos(@QueryParam("genero") String genero, @QueryParam("provincia")String provincia) {
+    public Response consultarTodos(@QueryParam("genero") String genero, @QueryParam("provincia") String provincia) {
         System.out.println(provincia);
-        return this.estudianteService.buscarTodos(genero);
+        return Response.status(Response.Status.OK).entity(this.estudianteService.buscarTodos(genero)).build();
     }
 
     /*
@@ -52,6 +57,7 @@ public class EstudianteController {
      */
     @POST
     @Path("")
+    @Consumes(MediaType.APPLICATION_XML) // para api JSON o XML
     @Operation(summary = "Guardar Estudiante", description = "Permite guardar un estudiante en el sistema de la base de datos")
     public void guardar(@RequestBody Estudiante estudiante) {
         this.estudianteService.guardar(estudiante);
