@@ -71,6 +71,7 @@ public class EstudianteController {
     @PUT
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response actualizarPorId(@RequestBody Estudiante estudiante, @PathParam("id") Integer id) {
         estudiante.setId(id);
         this.estudianteService.modificarPorId(estudiante);
@@ -85,8 +86,9 @@ public class EstudianteController {
     @PATCH
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response actualizarParcialPorId(@RequestBody Estudiante estudiante, @PathParam("id") Integer id) {
-        estudiante.setId(id);
+        //estudiante.setId(id);
         Estudiante e = this.estudianteService.buscarPorId(id);
         if (estudiante.getApellido() != null) {
             e.setApellido(estudiante.getApellido());
@@ -96,6 +98,9 @@ public class EstudianteController {
         }
         if (estudiante.getFechaNacimiento() != null) {
             e.setFechaNacimiento(estudiante.getFechaNacimiento());
+        }
+        if (estudiante.getGenero() != null) {
+            e.setGenero(estudiante.getGenero());
         }
         this.estudianteService.modificarParcialPorId(e);
         return Response.status(Response.Status.OK)
