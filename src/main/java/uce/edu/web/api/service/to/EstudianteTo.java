@@ -70,4 +70,12 @@ public class EstudianteTo {
         this.genero = genero;
     }
 
+    public Map<String, String> get_links() {
+        return _links;
+    }
+
+    public void set_links(Map<String, String> _links) {
+        this._links = _links;
+    }
+
 }
