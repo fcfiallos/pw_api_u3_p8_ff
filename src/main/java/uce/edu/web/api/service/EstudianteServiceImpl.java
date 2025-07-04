@@ -4,18 +4,23 @@ import java.util.List;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.core.UriInfo;
 import uce.edu.web.api.repository.IEstudianteRepository;
 import uce.edu.web.api.repository.modelo.Estudiante;
+import uce.edu.web.api.service.to.EstudianteTo;
 
-@ApplicationScoped 
-public class EstudianteServiceImpl implements IEstudianteService{
+@ApplicationScoped
+public class EstudianteServiceImpl implements IEstudianteService {
 
     @Inject
     private IEstudianteRepository estudianteRepository;
 
     @Override
-    public Estudiante buscarPorId(Integer id) {
-       return this.estudianteRepository.seleccionarPorId(id);
+    public EstudianteTo buscarPorId(Integer id, UriInfo uriInfo) {
+        Estudiante e = this.estudianteRepository.seleccionarPorId(id);
+        EstudianteTo eTo = new EstudianteTo(e.getId(), e.getNombre(), e.getApellido(), e.getFechaNacimiento(),
+                e.getGenero(), uriInfo);
+        return eTo;
     }
 
     @Override
