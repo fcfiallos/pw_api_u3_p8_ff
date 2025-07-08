@@ -1,6 +1,5 @@
 package uce.edu.web.api.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
@@ -24,13 +23,16 @@ import jakarta.ws.rs.core.UriInfo;
 import uce.edu.web.api.repository.modelo.Estudiante;
 import uce.edu.web.api.repository.modelo.Hijo;
 import uce.edu.web.api.service.IEstudianteService;
+import uce.edu.web.api.service.IHIjoService;
 import uce.edu.web.api.service.to.EstudianteTo;
 
 //tambien se le conoce como servicio (recursos)
 @Path("/estudiantes") /* url y representacion al modelo pero en plural */
-public class EstudianteController extends BaseControlador {
+public class EstudianteController {
     @Inject
     private IEstudianteService estudianteService;
+    @Inject
+    private IHIjoService hijoService;
 
     /*
      * cada metodo se le incluye un path y PathParam igual a Path Variable
@@ -96,20 +98,22 @@ public class EstudianteController extends BaseControlador {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response actualizarParcialPorId(@RequestBody Estudiante estudiante, @PathParam("id") Integer id) {
         // estudiante.setId(id);
-        /*Estudiante e = this.estudianteService.buscarPorId(id);
-        if (estudiante.getApellido() != null) {
-            e.setApellido(estudiante.getApellido());
-        }
-        if (estudiante.getNombre() != null) {
-            e.setNombre(estudiante.getNombre());
-        }
-        if (estudiante.getFechaNacimiento() != null) {
-            e.setFechaNacimiento(estudiante.getFechaNacimiento());
-        }
-        if (estudiante.getGenero() != null) {
-            e.setGenero(estudiante.getGenero());
-        }
-        this.estudianteService.modificarParcialPorId(e);*/
+        /*
+         * Estudiante e = this.estudianteService.buscarPorId(id);
+         * if (estudiante.getApellido() != null) {
+         * e.setApellido(estudiante.getApellido());
+         * }
+         * if (estudiante.getNombre() != null) {
+         * e.setNombre(estudiante.getNombre());
+         * }
+         * if (estudiante.getFechaNacimiento() != null) {
+         * e.setFechaNacimiento(estudiante.getFechaNacimiento());
+         * }
+         * if (estudiante.getGenero() != null) {
+         * e.setGenero(estudiante.getGenero());
+         * }
+         * this.estudianteService.modificarParcialPorId(e);
+         */
         return Response.status(Response.Status.OK)
                 .entity("{\"mensaje\": \"Estudiante actualizado parcialmente exitosamente\"}")
                 .build();
@@ -130,15 +134,6 @@ public class EstudianteController extends BaseControlador {
     @Path("/{id}/hijos") // debe ser auto descriptivo
     @Produces(MediaType.APPLICATION_JSON)
     public List<Hijo> obtenerHijosPorId(@PathParam("id") Integer id) {
-        Hijo hijo1 = new Hijo();
-        hijo1.setNombre("Pepito ");
-
-        Hijo hijo2 = new Hijo();
-        hijo2.setNombre("Juanito ");
-
-        List<Hijo> hijos = new  ArrayList<>();
-        hijos.add(hijo1);
-        hijos.add(hijo2);
-        return hijos;
+        return this.hijoService.buscarPorId(id);
     }
 }
