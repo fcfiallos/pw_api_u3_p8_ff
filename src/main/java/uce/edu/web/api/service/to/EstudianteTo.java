@@ -17,19 +17,6 @@ public class EstudianteTo {
     // esto es para los hipervinculos de hijos con el ejemplo
     private Map<String, String> _links = new HashMap<>();
 
-    public EstudianteTo(Integer id, String nombre, String apellido, LocalDateTime fechaNacimiento, String genero,
-            UriInfo uriInfo) {
-        this.id = id;
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.fechaNacimiento = fechaNacimiento;
-        this.genero = genero;
-        URI todosHijos = uriInfo.getBaseUriBuilder().path(EstudianteController.class)
-                .path(EstudianteController.class, "obtenerHijosPorId").build(id);
-
-        _links.put("hijos", todosHijos.toString());
-    }
-
     public Integer getId() {
         return id;
     }
@@ -78,4 +65,10 @@ public class EstudianteTo {
         this._links = _links;
     }
 
+    public void buildURI(UriInfo uriInfo) {
+        URI todosHijos = uriInfo.getBaseUriBuilder().path(EstudianteController.class)
+                .path(EstudianteController.class, "obtenerHijosPorId").build(id);
+
+        _links.put("hijos", todosHijos.toString());
+    }
 }

@@ -24,6 +24,7 @@ import uce.edu.web.api.repository.modelo.Estudiante;
 import uce.edu.web.api.repository.modelo.Hijo;
 import uce.edu.web.api.service.IEstudianteService;
 import uce.edu.web.api.service.IHIjoService;
+import uce.edu.web.api.service.mapper.EstudianteMapper;
 import uce.edu.web.api.service.to.EstudianteTo;
 
 //tambien se le conoce como servicio (recursos)
@@ -45,7 +46,8 @@ public class EstudianteController {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response consularPorId(@PathParam("id") Integer id, @Context UriInfo uriInfo) {
-        EstudianteTo estudianteTo = this.estudianteService.buscarPorId(id, uriInfo);
+        EstudianteTo estudianteTo = EstudianteMapper.toTO(this.estudianteService.buscarPorId(id));
+        estudianteTo.buildURI(uriInfo);
         return Response.status(227).entity(estudianteTo).build();
     }
 
