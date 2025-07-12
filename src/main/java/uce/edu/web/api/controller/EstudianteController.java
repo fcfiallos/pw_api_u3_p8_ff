@@ -20,12 +20,12 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
-import uce.edu.web.api.repository.modelo.Estudiante;
-import uce.edu.web.api.repository.modelo.Hijo;
 import uce.edu.web.api.service.IEstudianteService;
 import uce.edu.web.api.service.IHIjoService;
 import uce.edu.web.api.service.mapper.EstudianteMapper;
+import uce.edu.web.api.service.mapper.HijoMapper;
 import uce.edu.web.api.service.to.EstudianteTo;
+import uce.edu.web.api.service.to.HijoTo;
 
 //tambien se le conoce como servicio (recursos)
 @Path("/estudiantes") /* url y representacion al modelo pero en plural */
@@ -47,7 +47,6 @@ public class EstudianteController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response consularPorId(@PathParam("id") Integer id, @Context UriInfo uriInfo) {
         EstudianteTo estudianteTo = EstudianteMapper.toTO(this.estudianteService.buscarPorId(id));
-        estudianteTo.buildURI(uriInfo);
         return Response.status(227).entity(estudianteTo).build();
     }
 
@@ -58,7 +57,8 @@ public class EstudianteController {
     @Operation(summary = "Consultar Todos los Estudiantes", description = "Permite consultar todos los estudiantes del sistema")
     public Response consultarTodos(@QueryParam("genero") String genero, @QueryParam("provincia") String provincia) {
         System.out.println(provincia);
-        return Response.status(Response.Status.OK).entity(this.estudianteService.buscarTodos(genero)).build();
+        List<EstudianteTo> estudiantesTo = EstudianteMapper.toTOList(this.estudianteService.buscarTodos(genero));
+        return Response.status(Response.Status.OK).entity(estudiantesTo).build();
     }
 
     /*
@@ -70,7 +70,7 @@ public class EstudianteController {
     @Path("")
     @Consumes(MediaType.APPLICATION_JSON) // para api JSON o XML
     @Operation(summary = "Guardar Estudiante", description = "Permite guardar un estudiante en el sistema de la base de datos")
-    public Response guardar(@RequestBody Estudiante estudiante) {
+    public Response guardar(@RequestBody EstudianteTo estudiante) {
         this.estudianteService.guardar(estudiante);
         // 201 CREATED: La solicitud se realizó correctamente y, como resultado, se creó
         // un nuevo recurso.
@@ -83,7 +83,7 @@ public class EstudianteController {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response actualizarPorId(@RequestBody Estudiante estudiante, @PathParam("id") Integer id) {
+    public Response actualizarPorId(@RequestBody EstudianteTo estudiante, @PathParam("id") Integer id) {
         estudiante.setId(id);
         this.estudianteService.modificarPorId(estudiante);
         return Response.status(Response.Status.OK)
@@ -98,24 +98,10 @@ public class EstudianteController {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response actualizarParcialPorId(@RequestBody Estudiante estudiante, @PathParam("id") Integer id) {
-        // estudiante.setId(id);
-        /*
-         * Estudiante e = this.estudianteService.buscarPorId(id);
-         * if (estudiante.getApellido() != null) {
-         * e.setApellido(estudiante.getApellido());
-         * }
-         * if (estudiante.getNombre() != null) {
-         * e.setNombre(estudiante.getNombre());
-         * }
-         * if (estudiante.getFechaNacimiento() != null) {
-         * e.setFechaNacimiento(estudiante.getFechaNacimiento());
-         * }
-         * if (estudiante.getGenero() != null) {
-         * e.setGenero(estudiante.getGenero());
-         * }
-         * this.estudianteService.modificarParcialPorId(e);
-         */
+    public Response actualizarParcialPorId(@RequestBody EstudianteTo estudiante, @PathParam("id") Integer id) {
+        // Usamos el servicio que maneja la lógica de actualización parcial
+        this.estudianteService.modificarParcialPorId(estudiante, id);
+
         return Response.status(Response.Status.OK)
                 .entity("{\"mensaje\": \"Estudiante actualizado parcialmente exitosamente\"}")
                 .build();
@@ -135,7 +121,8 @@ public class EstudianteController {
     @GET
     @Path("/{id}/hijos") // debe ser auto descriptivo
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Hijo> obtenerHijosPorId(@PathParam("id") Integer id) {
-        return this.hijoService.buscarPorId(id);
+    public List<HijoTo> obtenerHijosPorId(@PathParam("id") Integer id) {
+
+        return HijoMapper.toTOList(this.hijoService.buscarPorId(id));
     }
 }
