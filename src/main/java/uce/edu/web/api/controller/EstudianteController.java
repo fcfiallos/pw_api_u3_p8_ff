@@ -47,6 +47,7 @@ public class EstudianteController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response consularPorId(@PathParam("id") Integer id, @Context UriInfo uriInfo) {
         EstudianteTo estudianteTo = EstudianteMapper.toTO(this.estudianteService.buscarPorId(id));
+        estudianteTo.buildURI(uriInfo);
         return Response.status(227).entity(estudianteTo).build();
     }
 
