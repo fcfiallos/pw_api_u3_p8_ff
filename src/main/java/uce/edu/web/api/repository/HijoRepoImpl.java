@@ -15,8 +15,14 @@ public class HijoRepoImpl implements IHIjoRepo{
     private EntityManager entityManager;
 
     @Override
-    public List<Hijo>  seleccionarPorId(Integer id) {
+    public List<Hijo>  seleccionarPorIdEstudiante(Integer id) {
         return this.entityManager.createQuery("SELECT h FROM Hijo h WHERE h.estudiante.id = :id", Hijo.class)
+                .setParameter("id", id).getResultList();
+    }
+
+    @Override
+    public List<Hijo> seleccionarPorIdProfesor(Integer id) {
+        return this.entityManager.createQuery("SELECT h FROM Hijo h WHERE h.profesor.id = :id", Hijo.class)
                 .setParameter("id", id).getResultList();
     }
 

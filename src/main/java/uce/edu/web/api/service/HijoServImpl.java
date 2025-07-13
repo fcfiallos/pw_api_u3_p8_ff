@@ -13,8 +13,13 @@ public class HijoServImpl implements IHIjoService{
     private IHIjoRepo hijoRepo;
 
     @Override
-    public List<Hijo>  buscarPorId(Integer id) {
-        return this.hijoRepo.seleccionarPorId(id);
+    public List<Hijo>  buscarPorIdEstudiante(Integer id) {
+        return this.hijoRepo.seleccionarPorIdEstudiante(id);
+    }
+
+    @Override
+    public List<Hijo> buscarPorIdProfesor(Integer id) {
+        return this.hijoRepo.seleccionarPorIdProfesor(id);
     }
 
 }

@@ -5,5 +5,6 @@ import java.util.List;
 import uce.edu.web.api.repository.modelo.Hijo;
 
 public interface IHIjoRepo {
-    public List<Hijo> seleccionarPorId(Integer id);
+    public List<Hijo> seleccionarPorIdEstudiante(Integer id);
+    public List<Hijo> seleccionarPorIdProfesor(Integer id);
 }

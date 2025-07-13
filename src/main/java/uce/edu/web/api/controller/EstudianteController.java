@@ -56,9 +56,10 @@ public class EstudianteController {
     @Path("")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Consultar Todos los Estudiantes", description = "Permite consultar todos los estudiantes del sistema")
-    public Response consultarTodos(@QueryParam("genero") String genero, @QueryParam("provincia") String provincia) {
+    public Response consultarTodos(@QueryParam("genero") String genero, @QueryParam("provincia") String provincia, @Context UriInfo uriInfo) {
         System.out.println(provincia);
         List<EstudianteTo> estudiantesTo = EstudianteMapper.toTOList(this.estudianteService.buscarTodos(genero));
+        estudiantesTo.forEach(estudiante -> estudiante.buildURI(uriInfo)); 
         return Response.status(Response.Status.OK).entity(estudiantesTo).build();
     }
 
@@ -124,6 +125,6 @@ public class EstudianteController {
     @Produces(MediaType.APPLICATION_JSON)
     public List<HijoTo> obtenerHijosPorId(@PathParam("id") Integer id) {
 
-        return HijoMapper.toTOList(this.hijoService.buscarPorId(id));
+        return HijoMapper.toTOList(this.hijoService.buscarPorIdEstudiante(id));
     }
 }

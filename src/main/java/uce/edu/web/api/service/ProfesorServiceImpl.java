@@ -4,22 +4,20 @@ import java.util.List;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.core.UriInfo;
 import uce.edu.web.api.repository.IProfesorRepository;
 import uce.edu.web.api.repository.modelo.Profesor;
+import uce.edu.web.api.service.mapper.ProfesorMapper;
 import uce.edu.web.api.service.to.ProfesorTo;
 
 @ApplicationScoped
-public class ProfesorServiceImpl  implements IProfesorService{
+public class ProfesorServiceImpl implements IProfesorService {
 
     @Inject
     private IProfesorRepository profesorRepository;
 
     @Override
-    public ProfesorTo buscarPorId(Integer id, UriInfo uriInfo) {
-        Profesor p = this.profesorRepository.seleccionarPorId(id);
-        ProfesorTo pTo = new ProfesorTo(p.getId(), p.getNombre(), p.getApellido(), p.getEspecialidad(), p.getCorreoElectronico(), p.getCedula(), uriInfo);
-        return pTo;
+    public Profesor buscarPorId(Integer id) {
+        return this.profesorRepository.seleccionarPorId(id);
     }
 
     @Override
@@ -28,18 +26,22 @@ public class ProfesorServiceImpl  implements IProfesorService{
     }
 
     @Override
-    public void insertar(Profesor profesor) {
-        this.profesorRepository.insertar(profesor);
+    public void insertar(ProfesorTo profesor) {
+        Profesor prof = ProfesorMapper.toEntity(profesor);
+        this.profesorRepository.insertar(prof);
     }
 
     @Override
-    public void modificarPorId(Profesor profesor) {
+    public void modificarPorId(ProfesorTo profesorTo) {
+        Profesor profesor = ProfesorMapper.toEntity(profesorTo);
         this.profesorRepository.actualizarPorId(profesor);
     }
 
     @Override
-    public void modificarParcialPorId(Profesor profesor) {
-        this.profesorRepository.actualizarParcialPorId(profesor);
+    public void modificarParcialPorId(ProfesorTo profesorTo, Integer id) {
+        Profesor prof = this.profesorRepository.seleccionarPorId(id);
+        ProfesorMapper.actualizarProfesorPorId(prof, profesorTo);
+        this.profesorRepository.actualizarParcialPorId(prof);
     }
 
     @Override
