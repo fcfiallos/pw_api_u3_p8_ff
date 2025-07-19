@@ -2,9 +2,13 @@ package uce.edu.web.api.controller;
 
 import java.util.List;
 
+import org.eclipse.microprofile.jwt.Claim;
+import org.eclipse.microprofile.jwt.ClaimValue;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -31,6 +35,11 @@ import uce.edu.web.api.service.to.HijoTo;
 @Path("/estudiantes") /* url y representacion al modelo pero en plural */
 public class EstudianteController {
     @Inject
+    JsonWebToken jwt;
+    @Inject
+    @Claim("sub") // es estandar
+    ClaimValue<String> subject;
+    @Inject
     private IEstudianteService estudianteService;
     @Inject
     private IHIjoService hijoService;
@@ -45,6 +54,7 @@ public class EstudianteController {
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("admin")
     public Response consularPorId(@PathParam("id") Integer id, @Context UriInfo uriInfo) {
         EstudianteTo estudianteTo = EstudianteMapper.toTO(this.estudianteService.buscarPorId(id));
         estudianteTo.buildURI(uriInfo);
@@ -56,10 +66,11 @@ public class EstudianteController {
     @Path("")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Consultar Todos los Estudiantes", description = "Permite consultar todos los estudiantes del sistema")
-    public Response consultarTodos(@QueryParam("genero") String genero, @QueryParam("provincia") String provincia, @Context UriInfo uriInfo) {
+    public Response consultarTodos(@QueryParam("genero") String genero, @QueryParam("provincia") String provincia,
+            @Context UriInfo uriInfo) {
         System.out.println(provincia);
         List<EstudianteTo> estudiantesTo = EstudianteMapper.toTOList(this.estudianteService.buscarTodos(genero));
-        estudiantesTo.forEach(estudiante -> estudiante.buildURI(uriInfo)); 
+        estudiantesTo.forEach(estudiante -> estudiante.buildURI(uriInfo));
         return Response.status(Response.Status.OK).entity(estudiantesTo).build();
     }
 
